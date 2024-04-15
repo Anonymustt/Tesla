@@ -42,18 +42,15 @@ class GameScene extends Phaser.Scene {
       this.character.setVelocityX(0);
     }
 
-    // Jumping
     if (this.cursors.up.isDown && !this.isJumping) {
       this.character.setVelocityY(-300);
       this.isJumping = true;
     }
 
-    // Firing ability (Q)
     if (Phaser.Input.Keyboard.JustDown(this.QKey)) {
       this.fireBullet();
     }
 
-    // Reset jump flag when character is on the ground
     if (this.character.body.onFloor()) {
       this.isJumping = false;
     }
@@ -61,7 +58,7 @@ class GameScene extends Phaser.Scene {
 
   fireBullet() {
     const bullet = this.bullets.create(this.character.x + 30, this.character.y + 10, "bullet");
-    bullet.setVelocityX(400); // Adjust bullet speed as needed
+    bullet.setVelocityX(400); 
   }
 }
 
