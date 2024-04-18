@@ -17,9 +17,27 @@ class GameScene extends Phaser.Scene {
     preload() {
         this.load.image("bg", "/assets/blueBG.jpeg");
         this.load.image("player", "./assets/player.png");
+        //player idle animation preload
+        this.load.image("player_idle_f1", "/assets/player_idle_ani/idle anim1.png")
+        this.load.image("player_idle_f2", "/assets/player_idle_ani/idle anim2.png")
+        this.load.image("player_idle_f3", "/assets/player_idle_ani/idle anim3.png")
+        this.load.image("player_idle_f4", "/assets/player_idle_ani/idle anim4.png")
     }
 
     create() {
+        //Animations
+        //Player idle animation
+        this.anims.create({
+            key:'player_idle',
+            frames:[
+                {key : 'player_idle_f1'},
+                {key : 'player_idle_f2'},
+                {key : 'player_idle_f3'},
+                {key : 'player_idle_f4'}
+            ],
+            frameRate:4,
+            repeat:-1
+        });
         this.add.image(0, 0, "bg").setScale(1,1).setOrigin(0, 0);
         const platforms = this.physics.add.staticGroup();
         platforms.create(this.sizes.width / 2, this.sizes.height - 50, null).setSize(this.sizes.width - 120, 10).setVisible(false);
@@ -29,11 +47,16 @@ class GameScene extends Phaser.Scene {
         platforms.create(312, this.sizes.height - 84).setSize(114, 10).setVisible(false);
         platforms.create(590, 315).setSize(90, 10).setVisible(false);
         platforms.create(590, 345).setSize(90, 10).setVisible(false);
-        this.player = this.physics.add.image(100, this.sizes.height - 100, "player").setScale(2,2).setOrigin(0, 0);
+        this.player = this.physics.add.sprite(100, this.sizes.height - 100, "player").setScale(1.5,1.5).setOrigin(0, 0).play('player_idle');
+        this.player.body.setOffset(1,1)
+        this.player.body.setSize(8,16)
         this.player.body.collideWorldBounds = true;
         this.physics.add.collider(this.player, platforms);
         this.physics.world.gravity.y = 1000; 
         this.player.setDrag(1000, 0);
+        this.cameras.main.startFollow(this.player, true); 
+        this.cameras.main.setZoom(2); 
+        this.cameras.main.setBounds(0, 0, this.sizes.width, this.sizes.height); 
         this.keys = this.input.keyboard.addKeys({
             left: Phaser.Input.Keyboard.KeyCodes.A,
             right: Phaser.Input.Keyboard.KeyCodes.D,
