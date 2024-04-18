@@ -3,8 +3,8 @@ import Phaser from 'phaser'
 import GameScene from './public/scenes/gameScene';
 
 const sizes = {
-  width: 1000,
-  height: 562
+  width: 1920,
+  height: 1080
 }
 
 const speedDown = 1000;
@@ -18,7 +18,7 @@ const config = {
     default:"arcade",
     arcade:{
       gravity:{y:speedDown},
-      debug:false
+      debug:true
     }
   },
   scene:[GameScene]
