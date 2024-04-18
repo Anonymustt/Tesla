@@ -24,14 +24,14 @@ class GameScene extends Phaser.Scene {
     this.load.image("character", "character.png");
     this.load.image("bullet", "bullet.png");
     this.load.image("enemy", "teslaCoil.png"); 
-    this.load.image("electricBolt", "electricBolt.png"); 
+    this.load.image("electricBolt", "lightening_circle.jpg"); 
   }
 
   create() {
     this.add.image(0, 0, "bg").setOrigin(0, 0);
 
     this.character = this.physics.add.sprite(100, 450, "character").setOrigin(0, 0);
-    this.character.body.setSize(190, 220);
+    this.character.body.setSize(190, 240);
     this.character.setCollideWorldBounds(true);
 
     this.bullets = this.physics.add.group();
