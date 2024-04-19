@@ -1,12 +1,12 @@
 import Phaser from "phaser";
+import { repeat } from "rxjs";
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y, 'player.png');
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        this.setOrigin(0, 0).setScale(5, 5);
-        this.body.setOffset(1, 1);
-        this.body.setSize(8, 16);
+        this.setOrigin(0.5, 0.5).setScale(1, 1);
+        this.setSize(30,85).setOffset(30,10)
         this.body.collideWorldBounds = true;
         //this.setDrag(1000, 0);
         this.initializeAni();
@@ -43,6 +43,40 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             frameRate:4,
             repeat:-1
         });
+
+        this.anims.create({
+            key:'player_move',
+            frames: [
+                {key : 'player_walk_1'},
+                {key : 'player_walk_2'},
+                {key : 'player_walk_3'},
+                {key : 'player_walk_4'},
+                {key : 'player_walk_5'},
+                {key : 'player_walk_6'},
+                {key : 'player_walk_7'},
+                {key : 'player_walk_8'},
+                {key : 'player_walk_9'},
+                {key : 'player_walk_10'},
+                {key : 'player_walk_11'}
+            ],
+            frameRate:22,
+            repeat:-1
+        });
+
+        this.anims.create({
+            key:'player_jump',
+            frames: [
+                {key : 'player_jump_1'},
+                {key : 'player_jump_2'},
+                {key : 'player_jump_3'},
+                {key : 'player_jump_4'},
+                {key : 'player_jump_5'},
+                {key : 'player_jump_6'}
+            ],
+            frameRate: 14,
+            repeat: -1
+        });
+
         this.play('player_idle')
     }
 
@@ -51,28 +85,51 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.handleGravity();
         if (this.body.onFloor()) {
             this.lastOnGroundTime = 0;
-            this.isJumping = false;
+            if (this.isJumping) {
+                this.isJumping = false; 
+                this.play('player_idle'); 
+            }
         } else {
             this.lastOnGroundTime += delta;
         }
     }
 
     handleInput(time) {
+        let moving = false;
+        let jumping = false;
+
         if (this.cursors.left.isDown) {
             this.setVelocityX(-this.playerVel);
             this.flipX = true;
+            moving = true;
         } else if (this.cursors.right.isDown) {
             this.setVelocityX(this.playerVel);
             this.flipX = false;
+            moving = true;
         } else {
             this.setVelocityX(0);
         }
-        if (this.cursors.jump.isDown && !this.isJumping && (this.body.onFloor()||this.lastOnGroundTime<=this.coyoteTime)) {
+        if(!this.isJumping){
+            if (moving) {
+                if (!this.anims.isPlaying || (this.anims.isPlaying && this.anims.currentAnim.key !== 'player_move')) {
+                    this.play('player_move', true);
+                }
+            } else if (!moving && this.anims.currentAnim.key !== 'player_idle') {
+                this.play('player_idle', true);
+            }
+        }
+    
+        if (this.cursors.jump.isDown && !this.isJumping && (this.body.onFloor() || this.lastOnGroundTime <= this.coyoteTime)) {
             this.setVelocityY(-this.jumpVel);
             this.isJumping = true;
         } else if (this.cursors.jump.isUp && this.isJumping) {
             this.body.setVelocityY(0.8 * this.body.velocity.y);
         }
+
+        if(this.isJumping){
+            this.play('player_jump', true);
+        }
+    
         if (this.cursors.dash.isDown && !this.isDashing && (time > this.lastDashTime + this.dashCooldown)) {
             this.isDashing = true;
             this.lastDashTime = time;
@@ -83,6 +140,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             }, [], this);
         }
     }
+    
 
     handleGravity() {
         if (!this.body.onFloor() && this.isJumping && this.cursors.down.isDown) {
