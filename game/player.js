@@ -11,7 +11,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         //this.setDrag(1000, 0);
         this.initializeAni();
         this.scene = scene;
-        this.jumpVel = 500;
+        this.jumpVel = 800;
         this.playerVel = 150;
         this.dashSpeed = 8000;
         this.isJumping = false;
@@ -73,7 +73,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 {key : 'player_jump_5'},
                 {key : 'player_jump_6'}
             ],
-            frameRate: 14,
+            frameRate: 8,
             repeat: -1
         });
 
