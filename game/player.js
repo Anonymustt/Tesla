@@ -11,6 +11,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         //this.setDrag(1000, 0);
         this.initializeAni();
         this.scene = scene;
+        this.platforms = platforms;
         this.jumpVel = 800;
         this.playerVel = 150;
         this.dashSpeed = 1200;
@@ -28,8 +29,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.fireRate = 200;
         this.lastFired = 0;
         this.bulletSpeed = 500;
-        
-        this.platforms = platforms;
+
+        this.maxHealth = 100;
+        this.health = this.maxHealth;
+        this.createHealthBar();
 
         this.bullets = scene.physics.add.group();
         this.mouse = scene.input.mousePointer;
@@ -213,6 +216,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         } else {
             this.scene.physics.world.gravity.y = this.worldGrav;
         }
+    }
+
+    createHealthBar(){
+        this.healthbarBg = this.scene.add.graphics();
+        this.healthbarBg.fillStyle(0x691616, 1);
+        this.healthbarBg.fillRoundedRect(30,30,400,40,{ tl: 10, tr: 10, bl: 10, br: 10 });
     }
 
     fireBullet() {
