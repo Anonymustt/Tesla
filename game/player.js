@@ -115,6 +115,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
+        this.updateHealth();
         this.handleInput(time);
         this.handleGravity();
         if (this.body.onFloor()) {
@@ -220,8 +221,21 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     createHealthBar(){
         this.healthbarBg = this.scene.add.graphics();
-        this.healthbarBg.fillStyle(0x691616, 1);
+        this.healthbarBg.fillStyle(0xFFFFFF, 1);
         this.healthbarBg.fillRoundedRect(30,30,400,40,{ tl: 10, tr: 10, bl: 10, br: 10 });
+        this.healthBar = this.scene.add.graphics();
+    }
+
+    updateHealth(){
+        let color = 0x00ff00;
+        if(this.health<50 && this.health>20){
+            color = 0xffff00;
+        }else if(this.health<=20){
+            color = 0xff0000;
+        }
+
+        this.healthBar.fillStyle(color,1);
+        this.healthBar.fillRoundedRect(35,32,390,35,{ tl: 10, tr: 10, bl: 10, br: 10 })
     }
 
     fireBullet() {
