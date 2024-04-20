@@ -17,7 +17,7 @@ const config = {
     default:"arcade",
     arcade:{
       gravity:{y:speedDown},
-      debug:true
+      debug:false
     }
   },
   scene: [Scene1]

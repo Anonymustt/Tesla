@@ -29,7 +29,8 @@ export default class Player1 extends Phaser.Physics.Arcade.Sprite{
 
     this.bullets = scene.physics.add.group();
 
-    this.health = 100;
+    this.maxHealth = 100;
+    this.health = this.maxHealth;
     this.createHealthBar();
 
     this.cursors = scene.input.keyboard.addKeys({
@@ -211,6 +212,8 @@ export default class Player1 extends Phaser.Physics.Arcade.Sprite{
     this.health -= damage;
     if (this.health < 0) {
         this.health = 0;
+        
+        // this.scene.gameOver();  Call a method to handle game over
     }
     this.updateHealthBar();
 }

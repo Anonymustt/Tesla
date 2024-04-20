@@ -41,6 +41,10 @@ export default class Scene1 extends Phaser.Scene {
 
         //bullet preload
         this.load.image("bulletPlayer1", "bullet.png")
+
+        //cloud
+        this.load.image("cloudImageKey", "electrocloud.jpg")
+        this.load.image("electronImageKey", "cloudbullet.jpg")
   }
 
   create() {
