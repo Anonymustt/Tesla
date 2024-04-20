@@ -12,7 +12,6 @@ class GameScene extends Phaser.Scene {
     preload() {
         this.load.image("bg", "/assets/LevelProto1.png");
         this.load.image("player", "./assets/player.png");
-        this.load.image("bullet", "/assets/bullet.png")
         //player idle animation preload
         this.load.image("player_idle_f1", "/assets/player_idle_ani/idle anim1.png")
         this.load.image("player_idle_f2", "/assets/player_idle_ani/idle anim2.png")
@@ -49,6 +48,15 @@ class GameScene extends Phaser.Scene {
         this.load.image("player_dash_10", "/assets/player_dash_ani/dash anim10.png")
         this.load.image("player_dash_11", "/assets/player_dash_ani/dash anim11.png")
         this.load.image("player_dash_12", "/assets/player_dash_ani/dash anim12.png")
+        //player bullets animation preload
+        this.load.image("bullet_1", "/assets/player_bullet_ani/Energy ball1.png")
+        this.load.image("bullet_2", "/assets/player_bullet_ani/Energy ball2.png")
+        this.load.image("bullet_3", "/assets/player_bullet_ani/Energy ball3.png")
+        this.load.image("bullet_4", "/assets/player_bullet_ani/Energy ball4.png")
+        //player shooting animation preload
+        this.load.image("player_shoot_1", "assets/player_shooting_ani/Attack frames1.png")
+        this.load.image("player_shoot_2", "assets/player_shooting_ani/Attack frames2.png")
+        this.load.image("player_shoot_3", "assets/player_shooting_ani/Attack frames3.png")
     }
 
     create() {

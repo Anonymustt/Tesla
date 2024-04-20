@@ -34,7 +34,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.health = this.maxHealth;
         this.createHealthBar();
 
-        this.bullets = scene.physics.add.group();
+        this.bullets = scene.physics.add.group({
+            classType : Phaser.Physics.Arcade.Sprite
+        });
         this.mouse = scene.input.mousePointer;
         this.cursors = scene.input.keyboard.addKeys({
             left: Phaser.Input.Keyboard.KeyCodes.A,
@@ -79,6 +81,20 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         });
 
         this.anims.create({
+            key:'player_shoot',
+            frames: [
+                {key : 'player_shoot_1'},
+                {key : 'player_shoot_2'},
+                {key : 'player_shoot_2'},
+                {key : 'player_shoot_2'},
+                {key : 'player_shoot_2'},
+                {key : 'player_shoot_3'}
+            ],
+            frameRate: 2,
+            repeat: 0
+        });
+
+        this.anims.create({
             key:'player_jump',
             frames: [
                 {key : 'player_jump_1'},
@@ -109,6 +125,18 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             ],
             frameRate: 60,
             repeat:0
+        });
+
+        this.scene.anims.create({
+            key:'player_bullet',
+            frames: [
+                {key : 'bullet_1'},
+                {key : 'bullet_2'},
+                {key : 'bullet_3'},
+                {key : 'bullet_4'}
+            ],
+            frameRate: 12,
+            repeat:-1
         });
 
         this.play('player_idle')
@@ -142,7 +170,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.dashAni = false;
         }
 
-        if(this.mouse.isDown){
+        if(this.mouse.isDown && !this.isDashing && !this.isDashingUp){
+            this.play('player_shoot');
             this.fireBullet();
         }
     }
@@ -252,15 +281,17 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     fireBullet() {
         if (this.scene.time.now > this.lastFired) {
-          const bullet = this.bullets.create(this.flipX? this.x-20:this.x+20, this.y+20, 'bullet');
-          const angle = Phaser.Math.Angle.Between(this.x, this.y, this.mouse.x, this.mouse.y);
-          bullet.setVelocity(Math.cos(angle)*this.bulletSpeed, Math.sin(angle)*this.bulletSpeed);
-          bullet.rotation = angle;
-          bullet.body.allowGravity = false;
-          this.scene.physics.add.collider(bullet, this.platforms, (bullet) => {
-            bullet.destroy(); 
-          });
-          this.lastFired = this.scene.time.now + this.fireRate;
+              const bullet = this.bullets.create(this.flipX? this.x-20:this.x+20, this.y+20, 'bullet_1');
+              bullet.setScale(1.5,1.5);
+              bullet.play('player_bullet');
+              const angle = Phaser.Math.Angle.Between(this.x, this.y, this.mouse.x, this.mouse.y);
+              bullet.setVelocity(Math.cos(angle)*this.bulletSpeed, Math.sin(angle)*this.bulletSpeed);
+              bullet.rotation = angle;
+              bullet.body.allowGravity = false;
+              this.scene.physics.add.collider(bullet, this.platforms, (bullet) => {
+                bullet.destroy(); 
+              });
+              this.lastFired = this.scene.time.now + this.fireRate;
         }
       }
 }
