@@ -13,14 +13,15 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene = scene;
         this.jumpVel = 800;
         this.playerVel = 150;
-        this.dashSpeed = 8000;
+        this.dashSpeed = 1200;
         this.isJumping = false;
         this.isDashing = false;
         this.lastDashTime = 0;
         this.dashCooldown = 1200;
-        this.dashDuration = 1200;
+        this.dashDuration = 200;
         this.lastOnGroundTime = 0;
         this.coyoteTime = 150;
+        this.dashAni = false;
 
         this.cursors = scene.input.keyboard.addKeys({
             left: Phaser.Input.Keyboard.KeyCodes.A,
@@ -70,11 +71,30 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 {key : 'player_jump_2'},
                 {key : 'player_jump_3'},
                 {key : 'player_jump_4'},
-                {key : 'player_jump_5'},
-                {key : 'player_jump_6'}
+                {key : 'player_jump_5'}
             ],
             frameRate: 8,
-            repeat: -1
+            repeat: 0
+        });
+
+        this.anims.create({
+            key:'player_dash',
+            frames: [
+                {key : 'player_dash_1'},
+                {key : 'player_dash_2'},
+                {key : 'player_dash_3'},
+                {key : 'player_dash_4'},
+                {key : 'player_dash_5'},
+                {key : 'player_dash_6'},
+                {key : 'player_dash_7'},
+                {key : 'player_dash_8'},
+                {key : 'player_dash_9'},
+                {key : 'player_dash_10'},
+                {key : 'player_dash_11'},
+                {key : 'player_dash_12'}
+            ],
+            frameRate: 60,
+            repeat:0
         });
 
         this.play('player_idle')
@@ -91,6 +111,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             }
         } else {
             this.lastOnGroundTime += delta;
+        }
+
+        if(this.isDashing){
+            this.body.velocity.x = this.flipX ? -this.dashSpeed : this.dashSpeed;
+        }
+
+        if(this.dashAni){
+            this.anims.stop();
+            this.play('player_dash')
+            this.dashAni = false;
         }
     }
 
@@ -109,7 +139,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         } else {
             this.setVelocityX(0);
         }
-        if(!this.isJumping){
+        if(!this.isJumping && !this.isDashing){
             if (moving) {
                 if (!this.anims.isPlaying || (this.anims.isPlaying && this.anims.currentAnim.key !== 'player_move')) {
                     this.play('player_move', true);
@@ -126,17 +156,18 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.body.setVelocityY(0.8 * this.body.velocity.y);
         }
 
-        if(this.isJumping){
+        if(this.isJumping && !this.isDashing){
             this.play('player_jump', true);
         }
     
         if (this.cursors.dash.isDown && !this.isDashing && (time > this.lastDashTime + this.dashCooldown)) {
             this.isDashing = true;
             this.lastDashTime = time;
-            this.body.velocity.x = this.flipX ? -this.dashSpeed : this.dashSpeed;
+            this.dashAni = true;
             this.scene.time.delayedCall(this.dashDuration, () => {
                 this.setVelocityX(0);
                 this.isDashing = false;
+                this.play('player_idle', true);
             }, [], this);
         }
     }

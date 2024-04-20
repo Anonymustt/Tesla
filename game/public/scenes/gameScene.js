@@ -35,7 +35,19 @@ class GameScene extends Phaser.Scene {
         this.load.image("player_jump_3", "/assets/player_jump_ani/jump anim2.png")
         this.load.image("player_jump_4", "/assets/player_jump_ani/jump anim3.png")
         this.load.image("player_jump_5", "/assets/player_jump_ani/jump anim4.png")
-        this.load.image("player_jump_6", "/assets/player_jump_ani/idle anim1.png")
+        //player dash animation preload
+        this.load.image("player_dash_1", "/assets/player_dash_ani/dash anim1.png")
+        this.load.image("player_dash_2", "/assets/player_dash_ani/dash anim2.png")
+        this.load.image("player_dash_3", "/assets/player_dash_ani/dash anim3.png")
+        this.load.image("player_dash_4", "/assets/player_dash_ani/dash anim4.png")
+        this.load.image("player_dash_5", "/assets/player_dash_ani/dash anim5.png")
+        this.load.image("player_dash_6", "/assets/player_dash_ani/dash anim6.png")
+        this.load.image("player_dash_7", "/assets/player_dash_ani/dash anim7.png")
+        this.load.image("player_dash_8", "/assets/player_dash_ani/dash anim8.png")
+        this.load.image("player_dash_9", "/assets/player_dash_ani/dash anim9.png")
+        this.load.image("player_dash_10", "/assets/player_dash_ani/dash anim10.png")
+        this.load.image("player_dash_11", "/assets/player_dash_ani/dash anim11.png")
+        this.load.image("player_dash_12", "/assets/player_dash_ani/dash anim12.png")
     }
 
     create() {
