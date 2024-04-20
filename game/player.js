@@ -147,11 +147,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     handleInput(time) {
         let moving = false;
 
-        if (this.cursors.left.isDown) {
+        if (this.cursors.left.isDown && !this.isDashing) {
             this.setVelocityX(-this.playerVel);
             this.flipX = true;
             moving = true;
-        } else if (this.cursors.right.isDown) {
+        } else if (this.cursors.right.isDown && !this.isDashing) {
             this.setVelocityX(this.playerVel);
             this.flipX = false;
             moving = true;
@@ -173,8 +173,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.isJumping = true;
         } else if (this.cursors.jump.isUp && this.isJumping) {
             this.body.setVelocityY(0.8 * this.body.velocity.y);
-        } else if (this.cursors.jump.isUp && this.isJumping && Math.abs(this.body.velocity.y)<0.1){
-            this.scene.physics.world.gravity.y = this.worldGrav/2;
+        } else if (this.isJumping && Math.abs(this.body.velocity.y)<0.1){
+            this.scene.physics.world.gravity.y = this.worldGrav/5;
         }
 
         if(this.isJumping && !this.isDashing && !this.isDashingUp){
