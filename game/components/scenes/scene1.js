@@ -66,13 +66,13 @@ export default class Scene1 extends Phaser.Scene {
         platforms.create(1715, 448, null).setSize(15, 130).setVisible(false);
         platforms.create(this.sizes.width-385, 820, null).setSize(15, 320).setVisible(false);
         platforms.create(this.sizes.width-498, 820, null).setSize(15, 320).setVisible(false);
+
         this.player = new Player1(this, 200, this.sizes.height-200, platforms);
         this.physics.add.collider(this.player, platforms);
         this.physics.world.gravity.y = 1000; 
         this.lastDashTime = this.time.now - this.dashCooldown;
 
-        const electronCloud = new ElectronCloud(this, 1300, 500, this.player);
-
+        const electronCloud = new ElectronCloud(this, 1300, 500, this.player, platforms);
         this.physics.add.collider(this.player, electronCloud);
         this.physics.add.collider(electronCloud, platforms);
         this.player.update(this.time, 0);
