@@ -7,7 +7,7 @@ const sizes = {
   height: 1080
 }
 
-const speedDown = 1000;
+const speedDown = 3000;
 
 const config = {
   type : Phaser.WEBGL,

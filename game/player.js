@@ -1,7 +1,7 @@
 import Phaser from "phaser";
-import { repeat } from "rxjs";
+import { repeat, timestamp } from "rxjs";
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y) {
+    constructor(scene, x, y, platforms) {
         super(scene, x, y, 'player.png');
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -16,19 +16,30 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.dashSpeed = 1200;
         this.isJumping = false;
         this.isDashing = false;
+        this.isDashingUp = false;
         this.lastDashTime = 0;
-        this.dashCooldown = 1200;
-        this.dashDuration = 200;
+        this.dashCooldown = 1500;
+        this.dashDuration = 250;
         this.lastOnGroundTime = 0;
         this.coyoteTime = 150;
         this.dashAni = false;
+        this.didDashUp = false;
+        this.worldGrav = 3000;
+        this.fireRate = 200;
+        this.lastFired = 0;
+        this.bulletSpeed = 500;
+        
+        this.platforms = platforms;
 
+        this.bullets = scene.physics.add.group();
+        this.mouse = scene.input.mousePointer;
         this.cursors = scene.input.keyboard.addKeys({
             left: Phaser.Input.Keyboard.KeyCodes.A,
             right: Phaser.Input.Keyboard.KeyCodes.D,
+            up: Phaser.Input.Keyboard.KeyCodes.W,
             down: Phaser.Input.Keyboard.KeyCodes.S,
             jump: Phaser.Input.Keyboard.KeyCodes.SPACE,
-            dash: Phaser.Input.Keyboard.KeyCodes.SHIFT
+            dash: Phaser.Input.Keyboard.KeyCodes.SHIFT,
         });
     }
 
@@ -74,7 +85,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 {key : 'player_jump_5'}
             ],
             frameRate: 8,
-            repeat: 0
+            repeat: -1
         });
 
         this.anims.create({
@@ -104,6 +115,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.handleInput(time);
         this.handleGravity();
         if (this.body.onFloor()) {
+            this.didDashUp = false;
             this.lastOnGroundTime = 0;
             if (this.isJumping) {
                 this.isJumping = false; 
@@ -111,6 +123,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             }
         } else {
             this.lastOnGroundTime += delta;
+        }
+
+        if(this.isDashingUp){
+            this.body.velocity.y = -this.dashSpeed;
         }
 
         if(this.isDashing){
@@ -122,11 +138,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.play('player_dash')
             this.dashAni = false;
         }
+
+        if(this.mouse.isDown){
+            this.fireBullet();
+        }
     }
 
     handleInput(time) {
         let moving = false;
-        let jumping = false;
 
         if (this.cursors.left.isDown) {
             this.setVelocityX(-this.playerVel);
@@ -139,7 +158,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         } else {
             this.setVelocityX(0);
         }
-        if(!this.isJumping && !this.isDashing){
+        if(!this.isJumping && !this.isDashing && !this.isDashingUp){
             if (moving) {
                 if (!this.anims.isPlaying || (this.anims.isPlaying && this.anims.currentAnim.key !== 'player_move')) {
                     this.play('player_move', true);
@@ -154,13 +173,24 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.isJumping = true;
         } else if (this.cursors.jump.isUp && this.isJumping) {
             this.body.setVelocityY(0.8 * this.body.velocity.y);
+        } else if (this.cursors.jump.isUp && this.isJumping && Math.abs(this.body.velocity.y)<0.1){
+            this.scene.physics.world.gravity.y = this.worldGrav/2;
         }
 
-        if(this.isJumping && !this.isDashing){
+        if(this.isJumping && !this.isDashing && !this.isDashingUp){
             this.play('player_jump', true);
         }
-    
-        if (this.cursors.dash.isDown && !this.isDashing && (time > this.lastDashTime + this.dashCooldown)) {
+        if((this.cursors.dash.isDown && this.cursors.up.isDown) && !this.isDashingUp && !this.isDashing && (time > this.lastDashTime + this.dashCooldown)){
+            this.isDashingUp = true;
+            this.didDashUp = true;
+            this.lastDashTime = time;
+            this.dashAni = true;
+            this.scene.time.delayedCall(this.dashDuration, () => {
+                this.setVelocityY(0);
+                this.isDashingUp = false;
+                this.play('player_idle', true);
+            }, [], this);
+        }else if (this.cursors.dash.isDown && !this.isDashing && (time > this.lastDashTime + this.dashCooldown)) {
             this.isDashing = true;
             this.lastDashTime = time;
             this.dashAni = true;
@@ -175,11 +205,27 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     handleGravity() {
         if (!this.body.onFloor() && this.isJumping && this.cursors.down.isDown) {
-            this.scene.physics.world.gravity.y = 5000;
-        } else if (!this.body.onFloor() && this.isJumping) {
-            this.scene.physics.world.gravity.y = 3000;
+            this.scene.physics.world.gravity.y = 3*this.worldGrav;
+        }else if(!this.body.onFloor() && this.isJumping && this.didDashUp){
+            this.scene.physics.world.gravity.y = 2*this.worldGrav;
+        } else if (!this.body.onFloor() && this.lastOnGroundTime > 500 && !this.didDashUp) {
+            this.scene.physics.world.gravity.y = 2*this.worldGrav;
         } else {
-            this.scene.physics.world.gravity.y = 1000;
+            this.scene.physics.world.gravity.y = this.worldGrav;
         }
     }
+
+    fireBullet() {
+        if (this.scene.time.now > this.lastFired) {
+          const bullet = this.bullets.create(this.flipX? this.x-20:this.x+20, this.y+20, 'bullet');
+          const angle = Phaser.Math.Angle.Between(this.x, this.y, this.mouse.x, this.mouse.y);
+          bullet.setVelocity(Math.cos(angle)*this.bulletSpeed, Math.sin(angle)*this.bulletSpeed);
+          bullet.rotation = angle;
+          bullet.body.allowGravity = false;
+          this.scene.physics.add.collider(bullet, this.platforms, (bullet) => {
+            bullet.destroy(); 
+          });
+          this.lastFired = this.scene.time.now + this.fireRate;
+        }
+      }
 }

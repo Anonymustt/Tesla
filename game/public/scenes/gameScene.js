@@ -12,6 +12,7 @@ class GameScene extends Phaser.Scene {
     preload() {
         this.load.image("bg", "/assets/LevelProto1.png");
         this.load.image("player", "./assets/player.png");
+        this.load.image("bullet", "/assets/bullet.png")
         //player idle animation preload
         this.load.image("player_idle_f1", "/assets/player_idle_ani/idle anim1.png")
         this.load.image("player_idle_f2", "/assets/player_idle_ani/idle anim2.png")
@@ -74,7 +75,7 @@ class GameScene extends Phaser.Scene {
         platforms.create(1715, 448, null).setSize(15, 130).setVisible(false);
         platforms.create(this.sizes.width-385, 820, null).setSize(15, 320).setVisible(false);
         platforms.create(this.sizes.width-498, 820, null).setSize(15, 320).setVisible(false);
-        this.player = new Player(this, 200, this.sizes.height-200);
+        this.player = new Player(this, 200, this.sizes.height-200, platforms);
         this.physics.add.collider(this.player, platforms);
         this.physics.world.gravity.y = 1000; 
         this.lastDashTime = this.time.now - this.dashCooldown;
