@@ -13,13 +13,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene = scene;
         this.platforms = platforms;
         this.jumpVel = 800;
-        this.playerVel = 150;
+        this.playerVel = 380;
         this.dashSpeed = 1200;
         this.isJumping = false;
         this.isDashing = false;
         this.isDashingUp = false;
         this.lastDashTime = 0;
-        this.dashCooldown = 1500;
+        this.dashCooldown = 1000;
         this.dashDuration = 250;
         this.lastOnGroundTime = 0;
         this.coyoteTime = 150;
@@ -28,7 +28,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.worldGrav = 3000;
         this.fireRate = 200;
         this.lastFired = 0;
-        this.bulletSpeed = 500;
+        this.bulletSpeed = 1000;
+        this.moving = false;
+        this.walkShootStrAni = false;
+        this.shootflg = false;
+        this.shootAngle;
 
         this.maxHealth = 100;
         this.health = this.maxHealth;
@@ -81,6 +85,25 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         });
 
         this.anims.create({
+            key: 'player_walk_shoot_diag',
+            frames: [
+                {key : 'walk_shoot_dia_1'},
+                {key : 'walk_shoot_dia_2'},
+                {key : 'walk_shoot_dia_3'},
+                {key : 'walk_shoot_dia_4'},
+                {key : 'walk_shoot_dia_5'},
+                {key : 'walk_shoot_dia_6'},
+                {key : 'walk_shoot_dia_7'},
+                {key : 'walk_shoot_dia_8'},
+                {key : 'walk_shoot_dia_9'},
+                {key : 'walk_shoot_dia_10'},
+                {key : 'walk_shoot_dia_11'}
+            ],
+            frameRate: 12,
+            repeat: -1
+        });
+
+        this.anims.create({
             key:'player_shoot',
             frames: [
                 {key : 'player_shoot_1'},
@@ -92,6 +115,25 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             ],
             frameRate: 2,
             repeat: 0
+        });
+
+        this.anims.create({
+            key:'player_walk_shoot_str',
+            frames: [
+                {key : 'walk_shoot_str_1'},
+                {key : 'walk_shoot_str_2'},
+                {key : 'walk_shoot_str_3'},
+                {key : 'walk_shoot_str_4'},
+                {key : 'walk_shoot_str_5'},
+                {key : 'walk_shoot_str_6'},
+                {key : 'walk_shoot_str_7'},
+                {key : 'walk_shoot_str_8'},
+                {key : 'walk_shoot_str_9'},
+                {key : 'walk_shoot_str_10'},
+                {key : 'walk_shoot_str_11'}
+            ],
+            frameRate: 12,
+            repeat:-1
         });
 
         this.anims.create({
@@ -121,7 +163,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 {key : 'player_dash_9'},
                 {key : 'player_dash_10'},
                 {key : 'player_dash_11'},
-                {key : 'player_dash_12'}
+                {key : 'player_dash_12'},
+                {key : 'player_dash_13'},
+                {key : 'player_dash_14'},
+                {key : 'player_dash_15'},
+                {key : 'player_dash_16'}
             ],
             frameRate: 60,
             repeat:0
@@ -143,6 +189,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
+        
         this.handleInput(time);
         this.handleGravity();
         if (this.body.onFloor()) {
@@ -169,33 +216,47 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.play('player_dash')
             this.dashAni = false;
         }
-
-        if(this.mouse.isDown && !this.isDashing && !this.isDashingUp){
+        if(this.mouse.isDown && !this.isDashing && !this.isDashingUp && !this.moving){
             this.play('player_shoot');
+            this.fireBullet();
+        }else if(this.mouse.isDown && !this.isDashing && !this.isDashingUp){
+            this.shootflg = true;
             this.fireBullet();
         }
     }
 
     handleInput(time) {
-        let moving = false;
-
+        
         if (this.cursors.left.isDown && !this.isDashing) {
             this.setVelocityX(-this.playerVel);
             this.flipX = true;
-            moving = true;
+            this.moving = true;
         } else if (this.cursors.right.isDown && !this.isDashing) {
             this.setVelocityX(this.playerVel);
             this.flipX = false;
-            moving = true;
+            this.moving = true;
         } else {
+            this.moving = false;
             this.setVelocityX(0);
         }
+        if(!this.mouse.isDown && !this.moving){
+            this.shootflg = false;
+        }
         if(!this.isJumping && !this.isDashing && !this.isDashingUp){
-            if (moving) {
-                if (!this.anims.isPlaying || (this.anims.isPlaying && this.anims.currentAnim.key !== 'player_move')) {
-                    this.play('player_move', true);
+            if (this.moving) {
+                if(this.mouse.isDown){
+                    if(this.shootflg && (!this.anims.isPlaying || (this.anims.isPlaying && this.anims.currentAnim.key !== 'player_walk_shoot_str'))){
+                        this.play('player_walk_shoot_str', true);
+                    }else if(this.shootflg && (this.shootAngle < -0.25 && this.shootAngle > -3) && (!this.anims.isPlaying || (this.anims.isPlaying && this.anims.currentAnim.key !== 'player_walk_shoot_diag'))){
+                        this.play('player_walk_shoot_diag', true);
+                    }
                 }
-            } else if (!moving && this.anims.currentAnim.key !== 'player_idle') {
+                else {
+                    if (!this.anims.isPlaying || (this.anims.isPlaying && this.anims.currentAnim.key !== 'player_move')) {
+                        this.play('player_move', true);
+                    }
+                }
+            } else if (!this.moving && this.anims.currentAnim.key !== 'player_idle') {
                 this.play('player_idle', true);
             }
         }
@@ -234,7 +295,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
     
-
     handleGravity() {
         if (!this.body.onFloor() && this.isJumping && this.cursors.down.isDown) {
             this.scene.physics.world.gravity.y = 3*this.worldGrav;
@@ -281,17 +341,18 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     fireBullet() {
         if (this.scene.time.now > this.lastFired) {
-              const bullet = this.bullets.create(this.flipX? this.x-20:this.x+20, this.y+20, 'bullet_1');
-              bullet.setScale(1.5,1.5);
-              bullet.play('player_bullet');
-              const angle = Phaser.Math.Angle.Between(this.x, this.y, this.mouse.x, this.mouse.y);
-              bullet.setVelocity(Math.cos(angle)*this.bulletSpeed, Math.sin(angle)*this.bulletSpeed);
-              bullet.rotation = angle;
-              bullet.body.allowGravity = false;
-              this.scene.physics.add.collider(bullet, this.platforms, (bullet) => {
+            const bullet = this.bullets.create(this.flipX? this.x-20:this.x+20, this.y+20, 'bullet_1');
+            bullet.setScale(1.5,1.5);
+            bullet.play('player_bullet');
+            this.shootAngle = Phaser.Math.Angle.Between(this.x, this.y, this.mouse.x, this.mouse.y);
+            console.log(this.shootAngle);
+            bullet.setVelocity(Math.cos(this.shootAngle)*this.bulletSpeed, Math.sin(this.shootAngle)*this.bulletSpeed);
+            bullet.rotation = this.shootAngle;
+            bullet.body.allowGravity = false;
+            this.scene.physics.add.collider(bullet, this.platforms, (bullet) => {
                 bullet.destroy(); 
-              });
-              this.lastFired = this.scene.time.now + this.fireRate;
+            });
+            this.lastFired = this.scene.time.now + this.fireRate;
         }
-      }
+    }
 }

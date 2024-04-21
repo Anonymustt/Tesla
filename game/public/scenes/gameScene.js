@@ -11,7 +11,7 @@ class GameScene extends Phaser.Scene {
 
     preload() {
         this.load.image("bg", "/assets/LevelProto1.png");
-        this.load.image("player", "./assets/player.png");
+        this.load.image("player", "/assets/player.png");
         //player idle animation preload
         this.load.image("player_idle_f1", "/assets/player_idle_ani/idle anim1.png")
         this.load.image("player_idle_f2", "/assets/player_idle_ani/idle anim2.png")
@@ -48,15 +48,43 @@ class GameScene extends Phaser.Scene {
         this.load.image("player_dash_10", "/assets/player_dash_ani/dash anim10.png")
         this.load.image("player_dash_11", "/assets/player_dash_ani/dash anim11.png")
         this.load.image("player_dash_12", "/assets/player_dash_ani/dash anim12.png")
+        this.load.image("player_dash_13", "/assets/player_dash_ani/dash anim13.png")
+        this.load.image("player_dash_14", "/assets/player_dash_ani/dash anim14.png")
+        this.load.image("player_dash_15", "/assets/player_dash_ani/dash anim15.png")
+        this.load.image("player_dash_16", "/assets/player_dash_ani/dash anim16.png")
         //player bullets animation preload
         this.load.image("bullet_1", "/assets/player_bullet_ani/Energy ball1.png")
         this.load.image("bullet_2", "/assets/player_bullet_ani/Energy ball2.png")
         this.load.image("bullet_3", "/assets/player_bullet_ani/Energy ball3.png")
         this.load.image("bullet_4", "/assets/player_bullet_ani/Energy ball4.png")
         //player shooting animation preload
-        this.load.image("player_shoot_1", "assets/player_shooting_ani/Attack frames1.png")
-        this.load.image("player_shoot_2", "assets/player_shooting_ani/Attack frames2.png")
-        this.load.image("player_shoot_3", "assets/player_shooting_ani/Attack frames3.png")
+        this.load.image("player_shoot_1", "/assets/player_shooting_ani/Attack frames1.png")
+        this.load.image("player_shoot_2", "/assets/player_shooting_ani/Attack frames2.png")
+        this.load.image("player_shoot_3", "/assets/player_shooting_ani/Attack frames3.png")
+        //player shooting straight walking animation preload 
+        this.load.image("walk_shoot_str_1", "/assets/player_walk_shoot_ani/walking shooting straight anim1.png")
+        this.load.image("walk_shoot_str_2", "/assets/player_walk_shoot_ani/walking shooting straight anim2.png")
+        this.load.image("walk_shoot_str_3", "/assets/player_walk_shoot_ani/walking shooting straight anim3.png")
+        this.load.image("walk_shoot_str_4", "/assets/player_walk_shoot_ani/walking shooting straight anim4.png")
+        this.load.image("walk_shoot_str_5", "/assets/player_walk_shoot_ani/walking shooting straight anim5.png")
+        this.load.image("walk_shoot_str_6", "/assets/player_walk_shoot_ani/walking shooting straight anim6.png")
+        this.load.image("walk_shoot_str_7", "/assets/player_walk_shoot_ani/walking shooting straight anim7.png")
+        this.load.image("walk_shoot_str_8", "/assets/player_walk_shoot_ani/walking shooting straight anim8.png")
+        this.load.image("walk_shoot_str_9", "/assets/player_walk_shoot_ani/walking shooting straight anim9.png")
+        this.load.image("walk_shoot_str_10", "/assets/player_walk_shoot_ani/walking shooting straight anim10.png")
+        this.load.image("walk_shoot_str_11", "/assets/player_walk_shoot_ani/walking shooting straight anim11.png")
+        //player shooting diagonal walking animation preload
+        this.load.image("walk_shoot_dia_1", "/assets/player_walk_shoot_dia_ani/walking shooting diagonal  anim1.png")
+        this.load.image("walk_shoot_dia_2", "/assets/player_walk_shoot_dia_ani/walking shooting diagonal  anim2.png")
+        this.load.image("walk_shoot_dia_3", "/assets/player_walk_shoot_dia_ani/walking shooting diagonal  anim3.png")
+        this.load.image("walk_shoot_dia_4", "/assets/player_walk_shoot_dia_ani/walking shooting diagonal  anim4.png")
+        this.load.image("walk_shoot_dia_5", "/assets/player_walk_shoot_dia_ani/walking shooting diagonal  anim5.png")
+        this.load.image("walk_shoot_dia_6", "/assets/player_walk_shoot_dia_ani/walking shooting diagonal  anim6.png")
+        this.load.image("walk_shoot_dia_7", "/assets/player_walk_shoot_dia_ani/walking shooting diagonal  anim7.png")
+        this.load.image("walk_shoot_dia_8", "/assets/player_walk_shoot_dia_ani/walking shooting diagonal  anim8.png")
+        this.load.image("walk_shoot_dia_9", "/assets/player_walk_shoot_dia_ani/walking shooting diagonal  anim9.png")
+        this.load.image("walk_shoot_dia_10", "/assets/player_walk_shoot_dia_ani/walking shooting diagonal  anim10.png")
+        this.load.image("walk_shoot_dia_11", "/assets/player_walk_shoot_dia_ani/walking shooting diagonal  anim11.png")
     }
 
     create() {
