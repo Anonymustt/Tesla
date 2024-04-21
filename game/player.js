@@ -245,9 +245,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if(!this.isJumping && !this.isDashing && !this.isDashingUp){
             if (this.moving) {
                 if(this.mouse.isDown){
-                    if(this.shootflg && (!this.anims.isPlaying || (this.anims.isPlaying && this.anims.currentAnim.key !== 'player_walk_shoot_str'))){
+                    if(this.shootflg && (this.shootAngle > -0.25) && (!this.anims.isPlaying || (this.anims.isPlaying && this.anims.currentAnim.key !== 'player_walk_shoot_str'))){
                         this.play('player_walk_shoot_str', true);
-                    }else if(this.shootflg && (this.shootAngle < -0.25 && this.shootAngle > -3) && (!this.anims.isPlaying || (this.anims.isPlaying && this.anims.currentAnim.key !== 'player_walk_shoot_diag'))){
+                    }else if(this.shootflg && (this.shootAngle < -0.35 && this.shootAngle > -2.2) && (!this.anims.isPlaying || (this.anims.isPlaying && this.anims.currentAnim.key !== 'player_walk_shoot_diag'))){
                         this.play('player_walk_shoot_diag', true);
                     }
                 }
@@ -345,7 +345,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             bullet.setScale(1.5,1.5);
             bullet.play('player_bullet');
             this.shootAngle = Phaser.Math.Angle.Between(this.x, this.y, this.mouse.x, this.mouse.y);
-            console.log(this.shootAngle);
             bullet.setVelocity(Math.cos(this.shootAngle)*this.bulletSpeed, Math.sin(this.shootAngle)*this.bulletSpeed);
             bullet.rotation = this.shootAngle;
             bullet.body.allowGravity = false;
