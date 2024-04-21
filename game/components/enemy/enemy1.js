@@ -17,7 +17,7 @@ export default class ElectronCloud extends Phaser.Physics.Arcade.Sprite {
 
     this.maxHealth = 500;
     this.health = this.maxHealth;
-    this.createHealthBar();
+    // this.createHealthBar();
 
     this.shootingTimer = scene.time.addEvent({
       delay: Phaser.Math.RND.between(800, 2500), 
