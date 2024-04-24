@@ -299,7 +299,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (!this.body.onFloor() && this.isJumping && this.cursors.down.isDown) {
             this.scene.physics.world.gravity.y = 3*this.worldGrav;
         }else if(!this.body.onFloor() && this.isJumping && this.didDashUp){
-            this.scene.physics.world.gravity.y = 2*this.worldGrav;
+            this.scene.physics.world.gravity.y = 2.2*this.worldGrav;
         } else if (!this.body.onFloor() && this.lastOnGroundTime > 500 && !this.didDashUp) {
             this.scene.physics.world.gravity.y = 2*this.worldGrav;
         } else {
