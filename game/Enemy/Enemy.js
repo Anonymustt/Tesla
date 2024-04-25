@@ -38,7 +38,6 @@ export default class Enemy1 extends Phaser.Physics.Arcade.Sprite {
 
     handleDamage(player, bullet){
         if (!player || !bullet) return;
-
         player.takeDamage(10);  
         bullet.destroy();   
     }
