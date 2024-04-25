@@ -1,5 +1,6 @@
 import Player from "../../player";
 import Phaser from "phaser";
+import Enemy1 from "../../Enemy/Enemy";
 class GameScene extends Phaser.Scene {
     constructor() {
         super("scene-game");
@@ -85,13 +86,35 @@ class GameScene extends Phaser.Scene {
         this.load.image("walk_shoot_dia_9", "/assets/player_walk_shoot_dia_ani/walking shooting diagonal  anim9.png")
         this.load.image("walk_shoot_dia_10", "/assets/player_walk_shoot_dia_ani/walking shooting diagonal  anim10.png")
         this.load.image("walk_shoot_dia_11", "/assets/player_walk_shoot_dia_ani/walking shooting diagonal  anim11.png")
+        //enemy 1 idle animation preload
+        this.load.image("enemy1_idle_1", "/assets/enemy1_idle_ani/Enemy 1 idle1.png");
+        this.load.image("enemy1_idle_2", "/assets/enemy1_idle_ani/Enemy 1 idle2.png");
+        this.load.image("enemy1_idle_3", "/assets/enemy1_idle_ani/Enemy 1 idle3.png");
+        this.load.image("enemy1_idle_4", "/assets/enemy1_idle_ani/Enemy 1 idle4.png");
+        this.load.image("enemy1_idle_5", "/assets/enemy1_idle_ani/Enemy 1 idle5.png");
+        this.load.image("enemy1_idle_6", "/assets/enemy1_idle_ani/Enemy 1 idle6.png");
+        this.load.image("enemy1_idle_7", "/assets/enemy1_idle_ani/Enemy 1 idle7.png");
+        this.load.image("enemy1_idle_8", "/assets/enemy1_idle_ani/Enemy 1 idle8.png");
+        this.load.image("enemy1_idle_9", "/assets/enemy1_idle_ani/Enemy 1 idle9.png");
+        //enemy 1 shooting animation preload
+        this.load.image("enemy1_shoot_1", "/assets/enemy1_shooting_ani/Enemy 1.png");
+        this.load.image("enemy1_shoot_2", "/assets/enemy1_shooting_ani/Enemy 2.png");
+        this.load.image("enemy1_shoot_3", "/assets/enemy1_shooting_ani/Enemy 3.png");
+        this.load.image("enemy1_shoot_4", "/assets/enemy1_shooting_ani/Enemy 4.png");
+        this.load.image("enemy1_shoot_5", "/assets/enemy1_shooting_ani/Enemy 5.png");
+        this.load.image("enemy1_shoot_6", "/assets/enemy1_shooting_ani/Enemy 6.png");
+        this.load.image("enemy1_shoot_7", "/assets/enemy1_shooting_ani/Enemy 7.png");
+        this.load.image("enemy1_shoot_8", "/assets/enemy1_shooting_ani/Enemy 8.png");
+        this.load.image("enemy1_shoot_9", "/assets/enemy1_shooting_ani/Enemy 9.png");
+        this.load.image("enemy1_shoot_10", "/assets/enemy1_shooting_ani/Enemy 10.png");
     }
 
     create() {
         //Background and platforms
         this.add.image(0, 0, "bg").setScale(1,1).setOrigin(0, 0);
         const platforms = this.physics.add.staticGroup();
-        platforms.create(this.sizes.width / 2, this.sizes.height - 100, null).setSize(this.sizes.width - 120, 15).setVisible(false);
+        const ground = this.physics.add.staticGroup();
+        ground.create(this.sizes.width / 2, this.sizes.height - 100, null).setSize(this.sizes.width - 120, 15).setVisible(false);
         platforms.create(this.sizes.width / 2, 100, null).setSize(this.sizes.width - 120, 15).setVisible(false);
         platforms.create(130, this.sizes.height / 2, null).setSize(15, this.sizes.height - 100).setVisible(false);
         platforms.create(202, 695, null).setSize(15, 170).setVisible(false);
@@ -111,14 +134,18 @@ class GameScene extends Phaser.Scene {
         platforms.create(1715, 448, null).setSize(15, 130).setVisible(false);
         platforms.create(this.sizes.width-385, 820, null).setSize(15, 320).setVisible(false);
         platforms.create(this.sizes.width-498, 820, null).setSize(15, 320).setVisible(false);
-        this.player = new Player(this, 200, this.sizes.height-200, platforms);
+        this.player = new Player(this, 200, this.sizes.height-200, platforms, ground);
         this.physics.add.collider(this.player, platforms);
+        this.physics.add.collider(this.player, ground);
         this.physics.world.gravity.y = 1000; 
         this.lastDashTime = this.time.now - this.dashCooldown;
+        this.enemy1 = new Enemy1(this, this.sizes.width/2, this.sizes.height - 200, platforms, this.player, ground);
+        this.physics.add.collider(this.enemy1, ground);
     }
 
     update(time, delta) {
         this.player.update(time, delta);
+        this.enemy1.update(time, delta);
     }
 }
 
