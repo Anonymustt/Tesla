@@ -134,12 +134,12 @@ class GameScene extends Phaser.Scene {
         platforms.create(1715, 448, null).setSize(15, 130).setVisible(false);
         platforms.create(this.sizes.width-385, 820, null).setSize(15, 320).setVisible(false);
         platforms.create(this.sizes.width-498, 820, null).setSize(15, 320).setVisible(false);
-        this.player = new Player(this, 200, this.sizes.height-200, platforms, ground);
+        this.enemy1 = new Enemy1(this, this.sizes.width/2, this.sizes.height - 200, platforms, this.player);
+        this.player = new Player(this, 200, this.sizes.height-200, platforms, this.enemy1);
         this.physics.add.collider(this.player, platforms);
         this.physics.add.collider(this.player, ground);
         this.physics.world.gravity.y = 1000; 
         this.lastDashTime = this.time.now - this.dashCooldown;
-        this.enemy1 = new Enemy1(this, this.sizes.width/2, this.sizes.height - 200, platforms, this.player, ground);
         this.physics.add.collider(this.enemy1, ground);
     }
 

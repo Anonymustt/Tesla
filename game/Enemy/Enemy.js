@@ -29,7 +29,6 @@ export default class Enemy1 extends Phaser.Physics.Arcade.Sprite {
         this.createHealthBar();
         this.timeToMove = 0;
         this.firstDetect = false;
-        
         this.bullets = scene.physics.add.group({
             classType : Phaser.Physics.Arcade.Sprite
         });
@@ -189,7 +188,6 @@ export default class Enemy1 extends Phaser.Physics.Arcade.Sprite {
         if (this.health < 0) {
             this.health = 100;
         }
-        return this;
     }
 
     createHealthBar(){

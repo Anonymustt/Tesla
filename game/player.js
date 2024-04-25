@@ -1,10 +1,11 @@
 import Phaser from "phaser";
 import { repeat, timestamp } from "rxjs";
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y, platforms) {
+    constructor(scene, x, y, platforms, enemy) {
         super(scene, x, y, 'player.png');
         scene.add.existing(this);
         scene.physics.add.existing(this);
+        this.enemy = enemy;
         this.setOrigin(0.5, 0.5).setScale(1, 1);
         this.setSize(30,85).setOffset(30,10)
         this.body.collideWorldBounds = true;
@@ -49,6 +50,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             jump: Phaser.Input.Keyboard.KeyCodes.SPACE,
             dash: Phaser.Input.Keyboard.KeyCodes.SHIFT,
         });
+
+        scene.physics.add.collider(this.enemy, this.bullets, this.handleDamage, null, this);
+    }
+
+    handleDamage(enemy, bullet){
+        if (!enemy || !bullet) return;
+        enemy.takeDamage(4);  
+        bullet.destroy();   
     }
 
     initializeAni(){
