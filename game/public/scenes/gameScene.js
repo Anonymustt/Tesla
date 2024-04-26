@@ -1,7 +1,8 @@
 import Player from "../../player";
 import Phaser from "phaser";
 import Enemy1 from "../../Enemy/Enemy";
-import Enemy2 from "../../Enemy/Enemy2";
+import EnemyHover from "../../Enemy/EnemyHover";
+
 class GameScene extends Phaser.Scene {
   constructor() {
     super("Game_Scene");
@@ -295,6 +296,20 @@ class GameScene extends Phaser.Scene {
       "enemy1_shoot_10",
       "/assets/enemy1_shooting_ani/Enemy 10.png"
     );
+    //Hover Enemy idle animation preload
+    this.load.image("enemyHover_idle_1", "/assets/enemyHover_idle_ani/Enemy 2 (1).png");
+    this.load.image("enemyHover_idle_2", "/assets/enemyHover_idle_ani/Enemy 3 (1).png");
+    this.load.image("enemyHover_idle_3", "/assets/enemyHover_idle_ani/Enemy 4 (1).png");
+    this.load.image("enemyHover_idle_4", "/assets/enemyHover_idle_ani/Enemy 5 (1).png");
+    this.load.image("enemyHover_idle_5", "/assets/enemyHover_idle_ani/Enemy 6 (1).png");
+    this.load.image("enemyHover_idle_6", "/assets/enemyHover_idle_ani/Enemy 7 (1).png");
+    //Hover Enemy attack animation preload
+    this.load.image("enemyHover_attack_1", "/assets/enemyHover_attack_ani/Enemy attack 2.png");
+    this.load.image("enemyHover_attack_2", "/assets/enemyHover_attack_ani/Enemy attack 3.png");
+    this.load.image("enemyHover_attack_3", "/assets/enemyHover_attack_ani/Enemy attack 4.png");
+    this.load.image("enemyHover_attack_4", "/assets/enemyHover_attack_ani/Enemy attack 5.png");
+    this.load.image("enemyHover_attack_5", "/assets/enemyHover_attack_ani/Enemy attack 6.png");
+    this.load.image("enemyHover_attack_6", "/assets/enemyHover_attack_ani/Enemy attack 7.png");
 
   }
 
@@ -307,49 +322,70 @@ class GameScene extends Phaser.Scene {
       .create(this.sizes.width / 2, this.sizes.height - 100, null)
       .setSize(this.sizes.width - 120, 15)
       .setVisible(false);
-    platforms
-      .create(this.sizes.width / 2, 100, null)
-      .setSize(this.sizes.width - 120, 15)
-      .setVisible(false);
-    platforms
-      .create(130, this.sizes.height / 2, null)
-      .setSize(15, this.sizes.height - 100)
-      .setVisible(false);
-    platforms
-      .create(1789, this.sizes.height / 2, null)
-      .setSize(15, this.sizes.height - 100)
-      .setVisible(false);
-    platforms
+      const platform1 = platforms.create(this.sizes.width / 2, 100, null).setVisible(false);
+      platform1.body.setSize(this.sizes.width - 120, 15);
+     const platform2 = platforms.create(130, this.sizes.height / 2, null).setVisible(false);
+     platform2.body.setSize(15, this.sizes.height - 100);
+    const platform3 = platforms.create(1789, this.sizes.height / 2, null).setVisible(false);
+    platform3.setSize(15, this.sizes.height - 100);
+
+    const platform4 = platforms
       .create(600, this.sizes.height - 130)
-      .setSize(214, 80)
       .setVisible(false);
-
-    platforms
+    platform4.setSize(214, 80);
+    const platform5 = platforms
       .create(1133, this.sizes.height / 2 + 94)
-      .setSize(170, 73)
       .setVisible(false);
-
-    platforms
+    platform5.setSize(170, 73);
+    const platform6 = platforms
       .create(165, this.sizes.height / 2 + 154)
-      .setSize(88, 170)
       .setVisible(false);
-
-    platforms
+    platform6.setSize(88, 170);
+    const platform7 = platforms
       .create(1750, this.sizes.height / 2 - 92)
-      .setSize(88, 140)
       .setVisible(false);
-
-    platforms
+    platform7.setSize(88, 140);
+    const platform8 = platforms
       .create(this.sizes.width - 440, 820, null)
-      .setSize(125, 320)
       .setVisible(false);
+    platform8.setSize(125, 320);
+      this.enemyHover1 = new EnemyHover(
+        this,
+        this.sizes.width/2,
+        this.sizes.height/2,
+        platforms,
+        'left',
+        350,
+        ground,
+        2
+      );
+      this.enemyHover2 = new EnemyHover(
+        this,
+        400,
+        400,
+        platforms,
+        'right',
+        150,
+        ground,
+        3
+      );
+      this.enemyHover3 = new EnemyHover(
+        this,
+        600,
+        600,
+        platforms,
+        'right',
+        400,
+        ground,
+        5
+      );
     this.enemy1 = new Enemy1(
       this,
       this.sizes.width / 2 - 20,
       this.sizes.height - 200,
       platforms
     );
-    this.enemy2 = new Enemy2(
+    this.enemy2 = new Enemy1(
         this,
         this.sizes.width / 2 + 40,
         this.sizes.height - 200,
@@ -360,19 +396,28 @@ class GameScene extends Phaser.Scene {
       200,
       this.sizes.height - 200,
       platforms,
-      [this.enemy1, this.enemy2]
+      [this.enemy1, this.enemy2, this.enemyHover1]
     );
     this.enemy1.player = this.player;
     this.enemy1.direction = 'left';
     this.enemy2.player = this.player;
     this.enemy2.direction = 'right';
+    this.enemyHover1.player = this.player;
+    this.enemyHover2.player = this.player;
+    this.enemyHover3.player = this.player;
     this.physics.add.collider(this.player, platforms);
     this.physics.add.collider(this.player, ground);
     this.physics.world.gravity.y = 1000;
     this.lastDashTime = this.time.now - this.dashCooldown;
     this.physics.add.collider(this.enemy1, ground);
     this.physics.add.collider(this.enemy2, ground);
-
+    this.physics.add.collider(this.enemyHover1, ground);
+    this.physics.add.collider(this.enemyHover1, platforms);
+    this.physics.add.collider(this.enemyHover2, ground);
+    this.physics.add.collider(this.enemyHover2, platforms);
+    this.physics.add.collider(this.enemyHover3, ground);
+    this.physics.add.collider(this.enemyHover3, platforms);
+        
     this.physics.add.overlap(
       this.enemy1,
       this.player.bullets,
@@ -400,20 +445,92 @@ class GameScene extends Phaser.Scene {
         this.enemy2.handleDamage,
         null,
         this.enemy2
+    );
+    this.physics.add.overlap(
+        this.enemyHover1,
+        this.player.bullets,
+        this.player.handleDamage,
+        null,
+        this.player
       );
+    this.physics.add.overlap(
+      this.player,
+      this.enemyHover1.bullets,
+      this.enemyHover1.handleDamage,
+      null,
+      this.enemyHover1
+    );
+    this.physics.add.overlap(
+        this.enemyHover2,
+        this.player.bullets,
+        this.player.handleDamage,
+        null,
+        this.player
+      );
+    this.physics.add.overlap(
+      this.player,
+      this.enemyHover2.bullets,
+      this.enemyHover2.handleDamage,
+      null,
+      this.enemyHover2
+    );
+    this.physics.add.overlap(
+        this.enemyHover3,
+        this.player.bullets,
+        this.player.handleDamage,
+        null,
+        this.player
+      );
+    this.physics.add.overlap(
+      this.player,
+      this.enemyHover3.bullets,
+      this.enemyHover3.handleDamage,
+      null,
+      this.enemyHover3
+    );
     this.physics.world.gravity.y = 3000;
+    this.createGameOverGraphic();
     this.events.on('enemyKilled', this.handleEnemyKilled, this);
   }
+
+  createGameOverGraphic() {
+    let graphics = this.add.graphics();
+    graphics.fillStyle(0x000000, 0.5);  
+    graphics.fillRect(0, 0, this.sizes.width, this.sizes.height);
+    let gameOverText = this.add.text(this.sizes.width / 2, this.sizes.height / 2, 'Game Over', {
+        fontSize: '64px',
+        fill: '#ffffff'
+    });
+    gameOverText.setOrigin(0.5, 0.5); 
+    graphics.setVisible(false);
+    gameOverText.setVisible(false);
+    this.gameOverGraphic = graphics;
+    this.gameOverText = gameOverText;
+}
 
   update(time, delta) {
     this.player.update(time, delta);
     this.enemy1.update(time, delta);
     this.enemy2.update(time, delta);
+    this.enemyHover1.update(time, delta);
+    this.enemyHover2.update(time, delta);
+    this.enemyHover3.update(time, delta);
+    if (this.player.health <= 0 && !this.gameOverGraphic.visible) {
+        this.gameOver();
+    }
   }
+
+  gameOver() {
+    this.gameOverGraphic.setVisible(true);
+    this.gameOverText.setVisible(true);
+    this.physics.pause(); 
+    this.player.setVelocity(0, 0); 
+    this.player.anims.stop();
+}
 
   handleEnemyKilled() {
     this.enemyKills++;
-    if (this.enemyKills >= 2) {
+    if (this.enemyKills >= 12) {
       this.scene.start('Final_Scene'); 
     }
   }

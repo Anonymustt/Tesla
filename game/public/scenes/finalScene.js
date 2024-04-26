@@ -321,11 +321,40 @@ class finalScene extends Phaser.Scene {
             this.enemy1
         );
         this.physics.world.gravity.y = 3000;
+        this.createGameOverGraphic();
     }
 
     update(time, delta) {
         this.player.update(time, delta);
         this.enemy1.update(time, delta);
+        if (this.player.health <= 0 && !this.gameOverGraphic.visible) {
+            this.gameOver();
+        }
+    }
+
+    createGameOverGraphic() {
+        let graphics = this.add.graphics();
+        graphics.fillStyle(0x000000, 0.5);  
+        graphics.fillRect(0, 0, this.sizes.width, this.sizes.height);
+    
+        let gameOverText = this.add.text(this.sizes.width / 2, this.sizes.height / 2, 'Game Over', {
+            fontSize: '64px',
+            fill: '#ffffff'
+        });
+        gameOverText.setOrigin(0.5, 0.5); 
+        graphics.setVisible(false);
+        gameOverText.setVisible(false);
+        this.gameOverGraphic = graphics;
+        this.gameOverText = gameOverText;
+    }
+
+    gameOver() {
+        this.gameOverGraphic.setVisible(true);
+        this.gameOverText.setVisible(true);
+        this.physics.pause(); 
+        this.player.setVelocity(0, 0); 
+        this.player.anims.stop();
+        this.anims.stop();
     }
 }
 

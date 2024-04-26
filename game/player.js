@@ -411,16 +411,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (causedByBoss) {
                 this.health -= damage;
                 this.invulnerable = true;
-                this.invulnerabilityTimer = 800; // 800 ms of invulnerability
-                // Visual feedback for invulnerability
+                this.invulnerabilityTimer = 800; 
                 this.setTint(0xff0000);
                 this.scene.time.delayedCall(800, () => {
                     this.invulnerable = false;
                     this.clearTint();
                 }, [], this);
-            }
-            if (this.health < 0) {
-                this.health = 100;
             }
         }
     }
