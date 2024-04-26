@@ -7,14 +7,11 @@ class MainMenu extends Phaser.Scene {
 
     preload() {
         this.load.audio("backgroundMusic", "bg_audio.mp3")
-
-
         this.load.image('background', '/assets/Level2.png');
         this.load.bitmapFont('custom', 'ka1.tff')
     }
 
     create() {
-
         const backgroundMusic = this.sound.add('backgroundMusic', { loop: true });
     backgroundMusic.play();
 
@@ -55,6 +52,10 @@ class MainMenu extends Phaser.Scene {
         quitButton.on('pointerout', () => {
             quitButton.setStyle({ fill: '#fff' });
         });
+    }
+
+    update(){
+        
     }
 }
 
