@@ -339,25 +339,37 @@ class finalScene extends Phaser.Scene {
         let graphics = this.add.graphics();
         graphics.fillStyle(0x000000, 0.5);  
         graphics.fillRect(0, 0, this.sizes.width, this.sizes.height);
-    
         let gameOverText = this.add.text(this.sizes.width / 2, this.sizes.height / 2, 'Game Over', {
             fontSize: '64px',
             fill: '#ffffff'
         });
         gameOverText.setOrigin(0.5, 0.5); 
+    
+        let restartButton = this.add.text(this.sizes.width / 2, this.sizes.height / 2 + 100, 'Restart Game', {
+            fontSize: '40px',
+            fill: '#ffffff',
+            backgroundColor: '#000000'
+        }).setOrigin(0.5, 0.5).setInteractive();
+    
+        restartButton.on('pointerdown', () => {
+            this.scene.start('Game_Scene');
+        });
+    
         graphics.setVisible(false);
         gameOverText.setVisible(false);
+        restartButton.setVisible(false);
         this.gameOverGraphic = graphics;
         this.gameOverText = gameOverText;
+        this.restartButton = restartButton;
     }
 
     gameOver() {
         this.gameOverGraphic.setVisible(true);
         this.gameOverText.setVisible(true);
+        this.restartButton.setVisible(true);
         this.physics.pause(); 
         this.player.setVelocity(0, 0); 
         this.player.anims.stop();
-        this.enemy1.anims.stop();
     }
 }
 
