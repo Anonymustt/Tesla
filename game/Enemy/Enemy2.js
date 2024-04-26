@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-export default class Enemy1 extends Phaser.Physics.Arcade.Sprite {
+export default class Enemy2 extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, platforms, player, direction) {
     super(scene, x, y, "Enemy_idle_1.png");
     this.scene = scene;
