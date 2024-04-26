@@ -147,7 +147,7 @@ export default class Boss extends Phaser.Physics.Arcade.Sprite {
 
     update(time, delta) {
         this.detectPlayer();
-        this.flipX = (this.player.x < this.x);
+        this.flipX = (this.player.x > this.x);
         if (true) {
             this.fireBullet();
         }
@@ -268,11 +268,11 @@ export default class Boss extends Phaser.Physics.Arcade.Sprite {
                 this.y + 20,
                 "enemy_bullet_1"
             );
-            bullet.setScale(0.7, 0.7);
+            bullet.setScale(-0.7, 0.7);
             bullet.setSize(90, 50);
             bullet.play("enemy_bullet");
 
-            let adjustedAngle = baseAngle + (this.flipX ? 1 : -1) * angleIncrement * i;    
+            let adjustedAngle = baseAngle + (this.flipX ? -1 : 1) * angleIncrement * i;    
             bullet.setVelocity(
                 Math.cos(adjustedAngle) * this.bulletSpeed,
                 Math.sin(adjustedAngle) * this.bulletSpeed
@@ -294,7 +294,7 @@ export default class Boss extends Phaser.Physics.Arcade.Sprite {
                 this.y + 20,
                 "enemy_bullet_1"
             );
-            bullet.setScale(0.7, 0.7);
+            bullet.setScale(-0.7, 0.7);
             bullet.setSize(90,50);
             bullet.play("enemy_bullet");
             bullet.setVelocity(

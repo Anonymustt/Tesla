@@ -1,16 +1,21 @@
 import Player from "../../player";
 import Phaser from "phaser";
-import Enemy1 from "../../Enemy/Enemy";
-import EnemyHover from "../../Enemy/EnemyHover";
 
-class GameScene extends Phaser.Scene {
+class cutScene extends Phaser.Scene {
   constructor() {
-    super("Game_Scene");
+    super("Cut_Scene");
     this.sizes = {
       width: 1920,
       height: 1080,
     };
     this.enemyKills = 0;
+    this.dialogueIndex = 0;
+    this.dialogueTexts = [
+        "The journey begins...",
+        "Watch out for the enemies!",
+        "Can you reach the end?",
+        "Good luck!"
+    ];
   }
 
   preload() {
@@ -349,54 +354,6 @@ class GameScene extends Phaser.Scene {
       .create(this.sizes.width - 440, 820, null)
       .setVisible(false);
     platform8.setSize(125, 320);
-      this.enemyHover1 = new EnemyHover(
-        this,
-        this.sizes.width/2,
-        this.sizes.height/2,
-        platforms,
-        'left',
-        350,
-        ground,
-        2
-      );
-      this.enemyHover2 = new EnemyHover(
-        this,
-        400,
-        400,
-        platforms,
-        'right',
-        150,
-        ground,
-        3
-      );
-      this.enemyHover3 = new EnemyHover(
-        this,
-        600,
-        600,
-        platforms,
-        'right',
-        400,
-        ground,
-        5
-      );
-    this.enemy1 = new Enemy1(
-      this,
-      this.sizes.width / 2 - 20,
-      this.sizes.height - 200,
-      platforms
-    );
-    this.enemy2 = new Enemy1(
-        this,
-        this.sizes.width / 2 + 40,
-        this.sizes.height - 200,
-        platforms
-    );
-    this.enemy3 = new Enemy1(
-        this,
-        this.sizes.width / 2,
-        this.sizes.height - 200,
-        platforms
-    );
     this.player = new Player(
       this,
       200,
@@ -404,160 +361,33 @@ class GameScene extends Phaser.Scene {
       platforms,
       [this.enemy1, this.enemy2, this.enemyHover1]
     );
-    this.enemy1.player = this.player;
-    this.enemy1.direction = 'left';
-    this.enemy2.player = this.player;
-    this.enemy2.direction = 'right';
-    this.enemy3.player = this.player;
-    this.enemy3.direction = 'right';
-    this.enemyHover1.player = this.player;
-    this.enemyHover2.player = this.player;
-    this.enemyHover3.player = this.player;
     this.physics.add.collider(this.player, platforms);
     this.physics.add.collider(this.player, ground);
-    this.physics.world.gravity.y = 3000;
+    this.physics.world.gravity.y = 1000;
     this.lastDashTime = this.time.now - this.dashCooldown;
-    this.physics.add.collider(this.enemy1, ground);
-    this.physics.add.collider(this.enemy2, ground);
-    this.physics.add.collider(this.enemy3, ground);
-    this.physics.add.collider(this.enemyHover1, ground);
-    this.physics.add.collider(this.enemyHover1, platforms);
-    this.physics.add.collider(this.enemyHover2, ground);
-    this.physics.add.collider(this.enemyHover2, platforms);
-    this.physics.add.collider(this.enemyHover3, ground);
-    this.physics.add.collider(this.enemyHover3, platforms);
-        
-    this.physics.add.overlap(
-      this.enemy1,
-      this.player.bullets,
-      this.player.handleDamage,
-      null,
-      this.player
-    );
-    this.physics.add.overlap(
-        this.enemy3,
-        this.player.bullets,
-        this.player.handleDamage,
-        null,
-        this.player
-      );
-    this.physics.add.overlap(
-        this.enemy2,
-        this.player.bullets,
-        this.player.handleDamage,
-        null,
-        this.player
-      );
-    this.physics.add.overlap(
-      this.player,
-      this.enemy1.bullets,
-      this.enemy1.handleDamage,
-      null,
-      this.enemy1
-    );
-    this.physics.add.overlap(
-        this.player,
-        this.enemy3.bullets,
-        this.enemy3.handleDamage,
-        null,
-        this.enemy3
-      );
-    this.physics.add.overlap(
-        this.player,
-        this.enemy2.bullets,
-        this.enemy2.handleDamage,
-        null,
-        this.enemy2
-    );
-    this.physics.add.overlap(
-        this.enemyHover1,
-        this.player.bullets,
-        this.player.handleDamage,
-        null,
-        this.player
-      );
-    this.physics.add.overlap(
-      this.player,
-      this.enemyHover1.bullets,
-      this.enemyHover1.handleDamage,
-      null,
-      this.enemyHover1
-    );
-    this.physics.add.overlap(
-        this.enemyHover2,
-        this.player.bullets,
-        this.player.handleDamage,
-        null,
-        this.player
-      );
-    this.physics.add.overlap(
-      this.player,
-      this.enemyHover2.bullets,
-      this.enemyHover2.handleDamage,
-      null,
-      this.enemyHover2
-    );
-    this.physics.add.overlap(
-        this.enemyHover3,
-        this.player.bullets,
-        this.player.handleDamage,
-        null,
-        this.player
-      );
-    this.physics.add.overlap(
-      this.player,
-      this.enemyHover3.bullets,
-      this.enemyHover3.handleDamage,
-      null,
-      this.enemyHover3
-    );
+
     this.physics.world.gravity.y = 3000;
-    this.createGameOverGraphic();
-    this.events.on('enemyKilled', this.handleEnemyKilled, this);
+
+    this.dialogueBox = this.add.text(this.player.x + 50, this.player.y - 50, this.dialogueTexts[this.dialogueIndex], {
+        fontSize: '20px', fill: '#fff', backgroundColor: '#0008', padding: 10, wordWrap: { width: 300 }
+    }).setOrigin(0.5);
+
+    this.input.on('pointerdown', this.advanceDialogue, this);
   }
 
-  createGameOverGraphic() {
-    let graphics = this.add.graphics();
-    graphics.fillStyle(0x000000, 0.5);  
-    graphics.fillRect(0, 0, this.sizes.width, this.sizes.height);
-    let gameOverText = this.add.text(this.sizes.width / 2, this.sizes.height / 2, 'Game Over', {
-        fontSize: '64px',
-        fill: '#ffffff'
-    });
-    gameOverText.setOrigin(0.5, 0.5); 
-    graphics.setVisible(false);
-    gameOverText.setVisible(false);
-    this.gameOverGraphic = graphics;
-    this.gameOverText = gameOverText;
+  advanceDialogue() {
+    this.dialogueIndex++;
+    if (this.dialogueIndex >= this.dialogueTexts.length) {
+        this.scene.start('Game_Scene');  
+    } else {
+        this.dialogueBox.setText(this.dialogueTexts[this.dialogueIndex]);
+    }
 }
 
   update(time, delta) {
     this.player.update(time, delta);
-    this.enemy1.update(time, delta);
-    this.enemy2.update(time, delta);
-    this.enemy3.update(time, delta);
-    this.enemyHover1.update(time, delta);
-    this.enemyHover2.update(time, delta);
-    this.enemyHover3.update(time, delta);
-    if (this.player.health <= 0 && !this.gameOverGraphic.visible) {
-        this.gameOver();
-    }
-  }
-
-  gameOver() {
-    this.gameOverGraphic.setVisible(true);
-    this.gameOverText.setVisible(true);
-    this.physics.pause(); 
-    this.player.setVelocity(0, 0); 
-    this.player.anims.stop();
-}
-
-  handleEnemyKilled() {
-    this.enemyKills++;
-    if (this.enemyKills >= 13) {
-      this.scene.start('Final_Scene'); 
-    }
+    this.dialogueBox.setPosition(this.player.x + 50, this.player.y - 50);
   }
 }
 
-export default GameScene;
+export default cutScene;

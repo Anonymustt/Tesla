@@ -2,6 +2,9 @@ import './style.css'
 import Phaser from 'phaser'
 import finalScene from './public/scenes/finalScene';
 import GameScene from './public/scenes/gameScene';
+import MainMenu from './public/scenes/mainMenu';
+import Ending from './public/scenes/Ending';
+import cutScene from './public/scenes/Cutscene';
 
 const sizes = {
   width: 1920,
@@ -22,7 +25,7 @@ const config = {
       debug:false
     }
   },
-  scene:[GameScene, finalScene]
+  scene:[MainMenu, cutScene, GameScene, finalScene, Ending]
 }
 
 const game = new Phaser.Game(config);

@@ -31,7 +31,7 @@ export default class Enemy1 extends Phaser.Physics.Arcade.Sprite {
     this.shootAngle;
     this.playerDetect = false;
     this.direction = direction;
-    this.maxHealth = 100;
+    this.maxHealth = 175;
     this.health = this.maxHealth;
     this.createHealthBar();
     this.timeToMove = 0;
@@ -245,12 +245,12 @@ export default class Enemy1 extends Phaser.Physics.Arcade.Sprite {
     let color = 0xff0000;
     this.healthBar.fillStyle(color, 1);
     if (this.health == 0) {
-      this.healthBar.fillRect(this.x - 35, this.y - 55, 0, 0);
+      this.healthBar.fillRect(this.x - 55, this.y - 55, 0, 0);
     } else {
       this.healthBar.fillRoundedRect(
-        this.x - 35,
+        this.x - 55,
         this.y - 55,
-        0.8 * this.health,
+        0.7 * this.health,
         5,
         { tl: 2, tr: 2, bl: 2, br: 2 }
       );

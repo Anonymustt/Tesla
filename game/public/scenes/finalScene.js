@@ -330,6 +330,9 @@ class finalScene extends Phaser.Scene {
         if (this.player.health <= 0 && !this.gameOverGraphic.visible) {
             this.gameOver();
         }
+        if (this.enemy1.health <= 0) {
+            this.scene.start('Ending');
+        }
     }
 
     createGameOverGraphic() {
@@ -354,7 +357,7 @@ class finalScene extends Phaser.Scene {
         this.physics.pause(); 
         this.player.setVelocity(0, 0); 
         this.player.anims.stop();
-        this.anims.stop();
+        this.enemy1.anims.stop();
     }
 }
 
