@@ -11,10 +11,15 @@ class cutScene extends Phaser.Scene {
     this.enemyKills = 0;
     this.dialogueIndex = 0;
     this.dialogueTexts = [
-        "The journey begins...",
-        "Watch out for the enemies!",
-        "Can you reach the end?",
-        "Good luck!"
+        "Where am I...",
+        "What happened to the experiment? Where is sir Tesla?",
+        "I feel electric power through my viens",
+        "Let's get out of here",
+        "Press A or D to move around",
+        "Press Space to Jump",
+        "Press Shift to Dash",
+        "Press W+Shift to Dash Upwards",
+        "Press mouse1 to shoot"
     ];
   }
 

@@ -5,31 +5,28 @@ class Ending extends Phaser.Scene {
         super('Ending');
     }
 
+    preload(){
+        this.load.image('background', '/assets/Level2.png');
+    }
+
     create() {
+        this.add.image(0, 0, 'background').setOrigin(0, 0).setDisplaySize(this.sys.game.config.width, this.sys.game.config.height);
         const { width, height } = this.sys.game.config;
 
-        this.add.text(width / 2, height * 0.1, 'Game Completed', { 
+        this.add.text(width / 2, height * 0.3, 'Game Completed', { 
             fontSize: '32px', 
             fill: '#fff',
             fontFamily: 'Arial',
             fontStyle: 'bold'
         }).setOrigin(0.5);
 
-        const storyText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit`;
+        const storyText = `Tesla's apprentice was never found after the experiment failed, Some say he became the very meaning of electricity, Some say it was just another Tesla's Trial`;
         this.add.text(width / 2, height / 2, storyText, {
             fontSize: '20px',
             fill: '#fff',
             fontFamily: 'Arial',
             align: 'center',
             wordWrap: { width: width - 100 }
-        }).setOrigin(0.5);
-
-        const creditsText = 'Credits:\nGame Development: 2 College Kids !';
-        this.add.text(width / 2, height * 0.9, creditsText, {
-            fontSize: '18px',
-            fill: '#fff',
-            fontFamily: 'Arial',
-            align: 'center'
         }).setOrigin(0.5);
     }
 }
