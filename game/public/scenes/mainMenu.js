@@ -6,14 +6,23 @@ class MainMenu extends Phaser.Scene {
     }
 
     preload() {
+        this.load.audio("backgroundMusic", "bg_audio.mp3")
+
+
         this.load.image('background', '/assets/Level2.png');
+        this.load.bitmapFont('custom', 'ka1.tff')
     }
 
     create() {
+
+        const backgroundMusic = this.sound.add('backgroundMusic', { loop: true });
+    backgroundMusic.play();
+
         this.add.image(0, 0, 'background').setOrigin(0, 0).setDisplaySize(this.sys.game.config.width, this.sys.game.config.height);
 
         let startButton = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2 - 60, 'Start Game', {
-            fontSize: '32px',
+            fontFamily: 'main',
+            fontSize: '38px',
             fill: '#fff'
         }).setOrigin(0.5).setInteractive();
 
@@ -29,8 +38,9 @@ class MainMenu extends Phaser.Scene {
             startButton.setStyle({ fill: '#fff' });
         });
 
-        let quitButton = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2 + 40, 'Quit Game', {
-            fontSize: '32px',
+        let quitButton = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2 + 54, 'Quit Game', {
+            fontFamily: 'main',
+            fontSize: '38px',
             fill: '#fff'
         }).setOrigin(0.5).setInteractive();
 

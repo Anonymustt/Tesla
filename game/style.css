@@ -5,6 +5,11 @@
   --accClr:#0D0D35;
 }
 
+@font-face {
+  font-family: main;
+  src: url(ka1.woff);
+}
+
 *{
   margin: 0;
   padding: 0;
@@ -46,3 +51,4 @@ main{
   display: flex;
   z-index: 1;
 }
+

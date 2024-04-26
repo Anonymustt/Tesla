@@ -14,6 +14,9 @@ class GameScene extends Phaser.Scene {
   }
 
   preload() {
+
+    this.load.audio("backgroundMusic", "bg_audio.mp3")
+
     this.load.image("bg", "/assets/LevelProto1.png");
     this.load.image("player", "/assets/player.png");
     //player idle animation preload
@@ -314,6 +317,10 @@ class GameScene extends Phaser.Scene {
   }
 
   create() {
+
+    const backgroundMusic = this.sound.add('backgroundMusic', { loop: true });
+    backgroundMusic.play();
+
     //Background and platforms
     this.add.image(0, 0, "bg").setScale(1, 1).setOrigin(0, 0);
     const platforms = this.physics.add.staticGroup();
@@ -521,19 +528,20 @@ class GameScene extends Phaser.Scene {
     graphics.fillStyle(0x000000, 0.5);  
     graphics.fillRect(0, 0, this.sizes.width, this.sizes.height);
     let gameOverText = this.add.text(this.sizes.width / 2, this.sizes.height / 2, 'Game Over', {
-        fontSize: '64px',
-        fill: '#ffffff'
+      fontFamily: 'main',
+      fontSize: '38px',
+      fill: '#fff'
     });
     gameOverText.setOrigin(0.5, 0.5); 
 
     let restartButton = this.add.text(this.sizes.width / 2, this.sizes.height / 2 + 100, 'Restart Game', {
-        fontSize: '40px',
-        fill: '#ffffff',
-        backgroundColor: '#000000'
+      fontFamily: 'main',
+      fontSize: '38px',
+      fill: '#fff'
     }).setOrigin(0.5, 0.5).setInteractive();
 
     restartButton.on('pointerdown', () => {
-        this.scene.start('Game_Scene');
+        this.scene.restart();
     });
 
     graphics.setVisible(false);
@@ -564,6 +572,7 @@ class GameScene extends Phaser.Scene {
     this.physics.pause(); 
     this.player.setVelocity(0, 0); 
     this.player.anims.stop();
+    this.enemyKills = 0;
 }
 
   handleEnemyKilled() {

@@ -25,7 +25,11 @@ const config = {
       debug:false
     }
   },
-  scene:[MainMenu, cutScene, GameScene, finalScene, Ending]
+  scene:[MainMenu, cutScene, GameScene, finalScene, Ending],
+  audio: {
+    disableWebAudio: false // Set to true if you prefer HTML5 Audio
+  }
 }
 
 const game = new Phaser.Game(config);
+

@@ -6,18 +6,24 @@ class Ending extends Phaser.Scene {
     }
 
     preload(){
+        this.load.audio("backgroundMusic", "bg_audio.mp3")
+
         this.load.image('background', '/assets/Level2.png');
     }
 
     create() {
+
+
+        const backgroundMusic = this.sound.add('backgroundMusic', { loop: true });
+    backgroundMusic.play();
+
         this.add.image(0, 0, 'background').setOrigin(0, 0).setDisplaySize(this.sys.game.config.width, this.sys.game.config.height);
         const { width, height } = this.sys.game.config;
 
         this.add.text(width / 2, height * 0.3, 'Game Completed', { 
-            fontSize: '32px', 
-            fill: '#fff',
-            fontFamily: 'Arial',
-            fontStyle: 'bold'
+            fontFamily: 'main',
+            fontSize: '38px',
+            fill: '#fff'
         }).setOrigin(0.5);
 
         const storyText = `Tesla's apprentice was never found after the experiment failed, Some say he became the very meaning of electricity, Some say it was just another Tesla's Trial`;

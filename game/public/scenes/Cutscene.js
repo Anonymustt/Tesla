@@ -24,6 +24,10 @@ class cutScene extends Phaser.Scene {
   }
 
   preload() {
+
+    this.load.audio("backgroundMusic", "bg_audio.mp3")
+
+
     this.load.image("bg", "/assets/LevelProto1.png");
     this.load.image("player", "/assets/player.png");
     //player idle animation preload
@@ -324,6 +328,8 @@ class cutScene extends Phaser.Scene {
   }
 
   create() {
+    const backgroundMusic = this.sound.add('backgroundMusic', { loop: true });
+    backgroundMusic.play();
     //Background and platforms
     this.add.image(0, 0, "bg").setScale(1, 1).setOrigin(0, 0);
     const platforms = this.physics.add.staticGroup();
